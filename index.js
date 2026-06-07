@@ -26,8 +26,10 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
 
-        const db = client.db("designVault")
+        const db = client.db("ideaVault")
         const ideasCollection = db.collection("ideas")
+        const commentCollection = db.collection("comments")
+
 
         // all ideas data api
         app.get("/ideas", async (req, res) => {
@@ -46,9 +48,25 @@ async function run() {
         app.get("/ideas/:id", async (req, res) => {
             const { id } = req.params
             const result = await ideasCollection.findOne({ _id: new ObjectId(id) })
+            // console.log(result)
             res.json(result)
         })
 
+        // user comment data post and get
+        app.post("/comments", async (req, res) => {
+            const commentData = req.body
+            // console.log(commentData, "body comments")
+            const result = await commentCollection.insertOne(commentData)
+            // console.log(result, "comments")
+            res.json(result)
+        })
+
+        // get commentData all
+        app.get("/comments/:id", async (req, res) => {
+            const { id } = req.params
+            const result = await commentCollection.find({ ideaId: id }).toArray()
+            res.json(result)
+        })
 
 
 
