@@ -1,7 +1,7 @@
 const express = require("express")
 const dotenv = require("dotenv")
 const cors = require("cors")
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 8000
 dotenv.config()
 
@@ -35,11 +35,17 @@ async function run() {
             res.json(result)
         })
 
-
         // ideas post (add-idea)
         app.post("/ideas", async (req, res) => {
             const ideasData = req.body
             const result = await ideasCollection.insertOne(ideasData);
+            res.json(result)
+        })
+
+        // ideas details data id only one data read
+        app.get("/ideas/:id", async (req, res) => {
+            const { id } = req.params
+            const result = await ideasCollection.findOne({ _id: new ObjectId(id) })
             res.json(result)
         })
 
