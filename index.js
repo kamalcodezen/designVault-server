@@ -110,6 +110,17 @@ async function run() {
         })
 
 
+        // my interaction page user comment get 
+        app.get("/comments/user/:userId", async (req, res) => {
+            const { userId } = req.params;
+
+            const result = await commentCollection
+                .find({ userId })
+                .toArray();
+
+            res.json(result);
+        });
+
 
 
         // Send a ping to confirm a successful connection
